@@ -1,0 +1,7 @@
+/pkg
+/doc
+/package
+# Gemfile.lock should not be added to git
+# For more details: http://yehudakatz.com/2010/12/16/clarifying-the-roles-of-the-gemspec-and-gemfile/
+Gemfile.lock
+/nbproject/private/

@@ -1,0 +1,144 @@
+Slot:	00:00.0
+Class:	0600
+Vendor:	8086
+Device:	0100
+SVendor:	1043
+SDevice:	844d
+Rev:	09
+
+Slot:	00:01.0
+Class:	0604
+Vendor:	8086
+Device:	0101
+Rev:	09
+
+Slot:	00:16.0
+Class:	0780
+Vendor:	8086
+Device:	1c3a
+SVendor:	1043
+SDevice:	844d
+Rev:	04
+
+Slot:	00:1a.0
+Class:	0c03
+Vendor:	8086
+Device:	1c2d
+SVendor:	1043
+SDevice:	844d
+Rev:	05
+ProgIf:	20
+
+Slot:	00:1b.0
+Class:	0403
+Vendor:	8086
+Device:	1c20
+SVendor:	1043
+SDevice:	840b
+Rev:	05
+
+Slot:	00:1c.0
+Class:	0604
+Vendor:	8086
+Device:	1c10
+Rev:	b5
+
+Slot:	00:1c.4
+Class:	0604
+Vendor:	8086
+Device:	244e
+Rev:	b5
+ProgIf:	01
+
+Slot:	00:1c.5
+Class:	0604
+Vendor:	8086
+Device:	1c1a
+Rev:	b5
+
+Slot:	00:1c.6
+Class:	0604
+Vendor:	8086
+Device:	1c1c
+Rev:	b5
+
+Slot:	00:1c.7
+Class:	0604
+Vendor:	8086
+Device:	1c1e
+Rev:	b5
+
+Slot:	00:1d.0
+Class:	0c03
+Vendor:	8086
+Device:	1c26
+SVendor:	1043
+SDevice:	844d
+Rev:	05
+ProgIf:	20
+
+Slot:	00:1f.0
+Class:	0601
+Vendor:	8086
+Device:	1c4a
+SVendor:	1043
+SDevice:	844d
+Rev:	05
+
+Slot:	00:1f.2
+Class:	0106
+Vendor:	8086
+Device:	1c02
+SVendor:	1043
+SDevice:	844d
+Rev:	05
+ProgIf:	01
+
+Slot:	00:1f.3
+Class:	0c05
+Vendor:	8086
+Device:	1c22
+SVendor:	1043
+SDevice:	844d
+Rev:	05
+
+Slot:	03:00.0
+Class:	0604
+Vendor:	1b21
+Device:	1080
+Rev:	01
+ProgIf:	01
+
+Slot:	04:01.0
+Class:	0400
+Vendor:	109e
+Device:	036e
+SVendor:	1461
+SDevice:	0771
+Rev:	11
+
+Slot:	04:01.1
+Class:	0480
+Vendor:	109e
+Device:	0878
+SVendor:	1461
+SDevice:	0771
+Rev:	11
+
+Slot:	05:00.0
+Class:	0200
+Vendor:	10ec
+Device:	8168
+SVendor:	1043
+SDevice:	83a3
+Rev:	03
+
+Slot:	06:00.0
+Class:	0c03
+Vendor:	1033
+Device:	0194
+SVendor:	1043
+SDevice:	8413
+Rev:	03
+ProgIf:	30
+
