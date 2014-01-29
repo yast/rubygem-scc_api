@@ -37,11 +37,12 @@ task :default => :test
 desc "Create package directory containing all things to build RPM"
 task :package => ["check:syntax", "check:committed", :test, :build] do
   pkg_name = "rubygem-scc_api"
+  version = `cat VERSION`.chomp
   include FileUtils::Verbose
   rm_rf "package"
   mkdir "package"
   cp "#{pkg_name}.changes","package/"
   cp "#{pkg_name}.spec.template","package/#{pkg_name}.spec"
-  sh 'cp pkg/*.gem package/'
-  sh "sed -i \"s:<VERSION>:`cat VERSION`:\" package/#{pkg_name}.spec"
+  sh "cp pkg/scc_api-#{version}.gem package/"
+  sh "sed -i \"s:<VERSION>:#{version}:\" package/#{pkg_name}.spec"
 end
