@@ -39,9 +39,6 @@ module SccApi
     private
 
     def self.parse(input)
-      user = nil
-      passwd = nil
-
       if input.match /^\s*username\s*=\s*(\S+)\s*$/
         user = $1
       end
