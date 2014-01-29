@@ -24,12 +24,9 @@ end
 
 begin
   require "yard"
-  YARD::Rake::YardocTask.new do |t|
-    t.files   = ["lib/**/*.rb"]
-    t.options = []
-  end
+  YARD::Rake::YardocTask.new
 rescue LoadError
-  puts "Yard not available, install it with 'gem install yard' command"
+  puts "Yard not available, install it with 'gem install yard' command" if verbose == true
 end
 
 task :default => :test
