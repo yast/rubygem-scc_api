@@ -40,19 +40,16 @@ module SccApi
       pci_out = `lspci -n -vmm`
 
       # the devices are separated by empty line
-      pci_devices = pci_out.split(/^$/)
-      vendor_ids = []
-
-      pci_devices.each do |pci_device|
+      result = pci_out.split(/^$/).reduce([]) do |result, pci_device|
         # 0300 = "VGA compatible controller"
         if pci_device.match /^Class:\s+0300$/
           if pci_device.match /^Vendor:\s+(\d+)/
-            vendor_ids << $1
+            result << VENDOR_ID_MAPPING[$1] || UNKNOWN_VENDOR
           end
         end
+        result
       end
 
-      result = vendor_ids.map { |vendor_id| VENDOR_ID_MAPPING[vendor_id] || UNKNOWN_VENDOR }
       Logger.log.info("HW detection: detected graphics cards vendors: #{result}")
 
       return result
