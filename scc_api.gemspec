@@ -28,9 +28,10 @@ Gem::Specification.new do |s|
   s.authors = ["Ladislav Slezak"]
   s.email = "lslezak@suse.cz"
   s.homepage = "http://github.com/yast/rubygem-scc_api"
-  s.licenses = ["GPLv2","The Ruby License"]
+  s.licenses = ["GPL-2.0", "Ruby"]
   s.platform = Gem::Platform::RUBY
   s.required_rubygems_version = ">= 1.3.6"
 
   s.add_development_dependency "rspec"
+  s.add_development_dependency "packaging_rake_tasks"
 end
