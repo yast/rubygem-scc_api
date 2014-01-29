@@ -5,7 +5,7 @@ require 'singleton'
 
 module SccApi
   # empty logger
-  class NullLogger < Logger
+  class NullLogger < ::Logger
     def initialize(*args)
     end
 
@@ -13,7 +13,11 @@ module SccApi
     end
   end
 
-  class Logger
+  # Singleton log instance used by SccApi::Logger module
+  #
+  # @example Set own logger
+  #   GlobalLogger.instance.log = Logger.new(STDERR)
+  class GlobalLogger
     include Singleton
 
     attr_accessor :log
@@ -22,14 +26,29 @@ module SccApi
     def initialize
       @log = NullLogger.new
     end
-
-    def self.log
-      Logger.instance.log
-    end
-
-    def self.set_logger(logger)
-      Logger.instance.log = logger
-    end
   end
 
+  # Module provides access to gem specific logging. To set logging see GlobalLogger.
+  #
+  # @example Add logging to class
+  #   class A
+  #     include SccApi::Logger
+  #
+  #     def self.f
+  #       log.info "self f"
+  #     end
+  #
+  #     def a
+  #       log.debug "a"
+  #     end
+  #   end
+  module Logger
+    def log
+      GlobalLogger.instance.log
+    end
+
+    def self.included(base)
+      base.extend self
+    end
+  end
 end

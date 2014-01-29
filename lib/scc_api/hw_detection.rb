@@ -6,6 +6,7 @@ module SccApi
 
   # TODO FIXME: add Yardoc comments
   class HwDetection
+    include Logger
 
     # the most important are ATI and nVidia for which we can offer driver
     # repositories, the rest is not important
@@ -24,7 +25,7 @@ module SccApi
       ret = `lscpu`
 
       if ret.match /^Socket\(s\):\s*(\d+)\s*$/
-        Logger.log.info("HW detection: detected #{$1} CPU sockets")
+        log.info("HW detection: detected #{$1} CPU sockets")
         return $1.to_i
       else
         raise "CPU detection failed"
@@ -50,7 +51,7 @@ module SccApi
         result
       end
 
-      Logger.log.info("HW detection: detected graphics cards vendors: #{result}")
+      log.info("HW detection: detected graphics cards vendors: #{result}")
 
       return result
     end

@@ -15,6 +15,7 @@ module SccApi
 
   # TODO FIXME: add Yardoc comments
   class Connection
+    include Logger
 
     attr_accessor :url, :email, :reg_code, :insecure, :credentials
 
@@ -48,7 +49,7 @@ module SccApi
         }
       }.to_json
 
-      Logger.log.info("Sending announce data: #{body}")
+      log.info("Sending announce data: #{body}")
 
       # see https://github.com/SUSE/happy-customer/wiki/Connect-API#wiki-sys_create
       # TODO FIXME: set "Accept-Language" HTTP header to set the language
@@ -104,9 +105,9 @@ module SccApi
       if target_url.is_a? URI::HTTPS
         http.use_ssl = true
         http.verify_mode = insecure ? OpenSSL::SSL::VERIFY_NONE : OpenSSL::SSL::VERIFY_PEER
-        Logger.log.warn("Warning: SSL certificate verification disabled") if insecure
+        log.warn("Warning: SSL certificate verification disabled") if insecure
       else
-        Logger.log.warn("Warning: Using insecure \"#{target_url.scheme}\" transfer protocol")
+        log.warn("Warning: Using insecure \"#{target_url.scheme}\" transfer protocol")
       end
 
       case method
@@ -134,7 +135,7 @@ module SccApi
       when Net::HTTPSuccess then
         # FIXME: better test the type, this looks fragile...
         if response["content-type"] == "application/json; charset=utf-8"
-          Logger.log.info("Request succeeded")
+          log.info("Request succeeded")
           return JSON.parse(response.body)
         else
           raise RuntimeError, "Unexpected content-type: #{response['content-type']}"
@@ -142,13 +143,13 @@ module SccApi
       when Net::HTTPRedirection then
         location = response['location']
         params[:url] = URI(location)
-        Logger.log.info("Redirected to #{location}")
+        log.info("Redirected to #{location}")
 
         # retry recursively
         json_http_handler(params, redirect_count - 1)
       else
         # TODO error handling
-        Logger.log.error("HTTP Error: #{response.inspect}")
+        log.error("HTTP Error: #{response.inspect}")
         raise "HTTP failed: #{response.code}: #{response.message}"
       end
     end

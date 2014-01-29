@@ -7,6 +7,7 @@ module SccApi
 
   # TODO FIXME: add Yardoc comments
   class Credentials
+    include Logger
 
     attr_accessor :username, :password
 
@@ -31,7 +32,7 @@ module SccApi
       dirname = File.dirname(file)
       FileUtils.mkdir_p(dirname) unless File.exist?(dirname)
 
-      Logger.log.info("Writing SCC credentials to #{file}")
+      log.info("Writing SCC credentials to #{file}")
       File.write(file, serialize)
     end
 
