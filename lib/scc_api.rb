@@ -20,3 +20,4 @@
 require "scc_api/credentials"
 require "scc_api/logger"
 require "scc_api/hw_detection"
+require "scc_api/connection"
