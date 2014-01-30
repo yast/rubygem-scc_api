@@ -16,6 +16,8 @@ end
 begin
   require "bundler"
   Bundler::GemHelper.install_tasks
+  # we have our own "build" task, remove the task from bundler
+  Rake::Task["build"].clear
 rescue LoadError
   puts "Bundler not available, install it with 'gem install bundler' command" if verbose == true
 end
@@ -48,8 +50,16 @@ task :package => ["check:syntax", "check:committed", :build] do
   include FileUtils::Verbose
   rm_rf "package"
   mkdir "package"
-  cp "#{pkg_name}.changes","package/"
-  cp "#{pkg_name}.spec.template","package/#{pkg_name}.spec"
-  sh "cp pkg/scc_api-#{version}.gem package/"
+  cp "#{pkg_name}.changes", "package/"
+  cp "#{pkg_name}.spec.template", "package/#{pkg_name}.spec"
+  sh "cp scc_api-#{version}.gem package/"
   sh "sed -i \"s:<VERSION>:#{version}:\" package/#{pkg_name}.spec"
+end
+
+# build the gem using "gem" command
+# "build" task from bundler might not be available
+desc "Build scc_api-#{Packaging::Configuration.instance.version}.gem file"
+task :build do
+  include FileUtils::Verbose
+  sh "gem build scc_api.gemspec"
 end
