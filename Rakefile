@@ -1,5 +1,4 @@
 require "rake"
-require "bundler"
 
 require "packaging/configuration"
 require "packaging/tasks"
@@ -14,7 +13,12 @@ Packaging.configuration do |conf|
   conf.obs_sr_project = "SUSE:SLE-12:GA"
 end
 
-Bundler::GemHelper.install_tasks
+begin
+  require "bundler"
+  Bundler::GemHelper.install_tasks
+rescue LoadError
+  puts "Bundler not available, install it with 'gem install bundler' command" if verbose == true
+end
 
 begin
   require "rspec/core/rake_task"
