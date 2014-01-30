@@ -1,4 +1,4 @@
-/pkg
+scc_api-*.gem
 /doc
 /package
 # Gemfile.lock should not be added to git
