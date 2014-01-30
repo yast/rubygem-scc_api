@@ -1,5 +1,4 @@
 require "rake"
-require "rspec/core/rake_task"
 require "bundler"
 
 require "packaging/configuration"
@@ -17,9 +16,15 @@ end
 
 Bundler::GemHelper.install_tasks
 
-desc "Run tests"
-RSpec::Core::RakeTask.new("test") do |t|
-  t.pattern ="test/**/*.rb"
+begin
+  require "rspec/core/rake_task"
+
+  desc "Run tests"
+  RSpec::Core::RakeTask.new("test") do |t|
+    t.pattern ="test/**/*.rb"
+  end
+rescue LoadError
+  puts "RSpec not available, install it with 'gem install rspec' command" if verbose == true
 end
 
 begin
@@ -32,7 +37,7 @@ end
 task :default => :test
 
 desc "Create package directory containing all things to build RPM"
-task :package => ["check:syntax", "check:committed", :test, :build] do
+task :package => ["check:syntax", "check:committed", :build] do
   config = Packaging::Configuration.instance
   pkg_name = config.package_name
   version = config.version
