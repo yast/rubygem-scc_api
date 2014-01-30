@@ -3,7 +3,7 @@
     <type>org.netbeans.modules.ruby.rubyproject</type>
     <configuration>
         <data xmlns="http://www.netbeans.org/ns/ruby-project/1">
-            <name>scc_api</name>
+            <name>rubygem-scc_api</name>
             <source-roots>
                 <root id="src.dir"/>
             </source-roots>
