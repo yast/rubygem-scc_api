@@ -28,7 +28,6 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 BuildRequires:  rubygems_with_buildroot_patch
 %rubygems_requires
 BuildRequires:  rubygem-rspec
-BuildRequires:  rubygem-bundler
 BuildRequires:  rubygem-packaging_rake_tasks
 #
 Url:            http://github.com/yast/rubygem-scc_api
