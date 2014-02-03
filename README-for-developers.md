@@ -27,6 +27,7 @@ package and submitting it into Build Service.
 Development Notes
 -----------------
 
+- Use the usual fork/pull request GitHub workflow, you can also ask for push permissions.
 - Do not use external rubygems or external command line tools unless really
   needed. The package is used at installation when the system runs from RAM
   disk and the space is critical. (Using tools/gems which are already present
