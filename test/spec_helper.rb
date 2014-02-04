@@ -4,6 +4,8 @@ begin
   require 'simplecov'
   # ignore coverage in tests
   SimpleCov.add_filter "/test/"
+  # less than 60% code covarage triggers a failure
+  SimpleCov.minimum_coverage 60
   SimpleCov.start
 rescue LoadError
   $stderr.puts "Code coverage disabled: simplecov gem not installed"
