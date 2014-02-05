@@ -14,12 +14,13 @@ module SccApi
     # default suffix
     BASEFILE_SUFFIX = "_credentials"
 
-    attr_reader :username, :password, :service
+    attr_reader :username, :password, :service, :file
 
-    def initialize(user, password, service)
+    def initialize(user, password, service, file = nil)
       @username = user
       @password = password
       @service = service
+      @file = file
     end
 
     def self.read(file)
@@ -27,14 +28,14 @@ module SccApi
 
       user, passwd = parse(content)
       log.info("Reading credentials from #{file}")
-      credentials = Credentials.new(user, passwd, service_name(file))
+      credentials = Credentials.new(user, passwd, service_name(file), file)
       log.debug("Read credentials: #{credentials}")
       credentials
     end
 
     # Write credentials to a file
     def write(dir = nil)
-      filename = file_path(dir)
+      filename = file || file_path(dir)
 
       # create the target directory if it is missing
       dirname = File.dirname(filename)
@@ -44,11 +45,12 @@ module SccApi
       log.debug("Credentials to write: #{self}")
       # make sure only the owner can read the content
       File.write(filename, serialize, {:perm => 0600})
+      @file = filename
     end
 
     # security - override to_s to avoid writing the password to log
     def to_s
-      "#<#{self.class}:#{sprintf("%0#16x", object_id)} @username=#{username.inspect}, @password=\"[FILTERED]\", @service=#{service.inspect}>"
+      "#<#{self.class}:#{sprintf("%0#16x", object_id)} @username=#{username.inspect}, @password=\"[FILTERED]\", @service=#{service.inspect} @file=#{file.inspect}>"
     end
 
     private
