@@ -56,7 +56,7 @@ module SccApi
       # used for error messages
 
       params = {
-        :url => URI(url + "/announce"),
+        :url => URI(url + "/subscriptions/systems"),
         :headers => {"Authorization" => "Token token=\"#{reg_code}\""},
         :body => body,
         :method => :post
@@ -76,7 +76,7 @@ module SccApi
       }.to_json
 
       params = {
-        :url => URI(url + "/activate"),
+        :url => URI(url + "/systems/products"),
         :body => body,
         :method => :post,
         :credentials => credentials
@@ -95,40 +95,22 @@ module SccApi
       target_url = params[:url]
       raise "URL parameter missing" unless target_url
 
-      headers = params[:headers] || {}
-      body = params[:body] || ""
-      method = params[:method] || :get
+      # set defaults
+      params[:method] ||= :get
+      params[:headers] ||= {}
+      params[:body] ||= ""
 
-      http = Net::HTTP.new(target_url.host, target_url.port)
+      http = create_http_connection(target_url)
+      request = create_request(params[:method], target_url)
 
-      # switch to HTTPS connection
-      if target_url.is_a? URI::HTTPS
-        http.use_ssl = true
-        http.verify_mode = insecure ? OpenSSL::SSL::VERIFY_NONE : OpenSSL::SSL::VERIFY_PEER
-        log.warn("Warning: SSL certificate verification disabled") if insecure
-      else
-        log.warn("Warning: Using insecure \"#{target_url.scheme}\" transfer protocol")
-      end
-
-      case method
-      when :post then
-        request = Net::HTTP::Post.new(target_url.request_uri)
-      when :put then
-        request = Net::HTTP::Put.new(target_url.request_uri)
-      when :get then
-        request = Net::HTTP::Get.new(target_url.request_uri)
-      else
-        raise "Unsupported HTTP method: #{method}"
-      end
-
-      JSON_HTTP_HEADER.merge(headers).each {|k,v| request[k] = v}
-      request.body = body
+      JSON_HTTP_HEADER.merge(params[:headers]).each {|k,v| request[k] = v}
+      request.body = params[:body]
 
       # use Basic Auth if credentials are present
-      if params[:credentials]
-        request.basic_auth(params[:credentials].username, params[:credentials].password)
-      end
+      credentials = params[:credentials]
+      request.basic_auth(credentials.username, credentials.password) if credentials
 
+      # send the HTTP request
       response = http.request(request)
 
       case response
@@ -152,6 +134,33 @@ module SccApi
         log.error("HTTP Error: #{response.inspect}")
         raise "HTTP failed: #{response.code}: #{response.message}"
       end
+    end
+
+    def create_http_connection(url)
+      http = Net::HTTP.new(url.host, url.port)
+
+      # switch to HTTPS connection
+      if url.is_a? URI::HTTPS
+        http.use_ssl = true
+        http.verify_mode = insecure ? OpenSSL::SSL::VERIFY_NONE : OpenSSL::SSL::VERIFY_PEER
+        log.warn("Warning: SSL certificate verification disabled") if insecure
+      else
+        log.warn("Warning: Using insecure \"#{url.scheme}\" transfer protocol")
+      end
+
+      return http
+    end
+
+    def create_request(method, url)
+      request_class = case method
+      when :post then Net::HTTP::Post
+      when :put  then Net::HTTP::Put
+      when :get  then Net::HTTP::Get
+      else
+        raise "Unsupported HTTP method: #{method}"
+      end
+
+      request_class.new(url.request_uri)
     end
 
   end
