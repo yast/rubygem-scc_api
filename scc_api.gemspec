@@ -19,7 +19,11 @@ Gem::Specification.new do |s|
     "test/fixtures/lscpu_1_socket.out",
     "test/fixtures/lspci_intel_gfx.out",
     "test/fixtures/lspci_no_gfx.out",
-    "test/hw_detection_test.rb"
+    "test/fixtures/SUSE_SLES_credentials",
+    "test/spec_helper.rb",
+    "test/hw_detection_test.rb",
+    "test/scc_test.rb",
+    "test/credentials_test.rb",
   ]
   s.require_path = 'lib'
   s.has_rdoc = true

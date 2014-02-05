@@ -66,6 +66,8 @@ Test::Unit or RSpec files, useful for developers.
 %build
 %install
 %gem_install %{S:0}
+
+%check
 # run tests during RPM build
 (cd $RPM_BUILD_ROOT/%{_libdir}/ruby/gems/%{rb_ver}/gems/%{mod_name}-%{version}/ && rake test)
 
