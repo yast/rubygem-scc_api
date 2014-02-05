@@ -19,10 +19,7 @@ module SccApi
     UNKNOWN_VENDOR = "unknown"
 
     def self.cpu_sockets
-      lc_all_bak = ENV["LC_ALL"]
-      # run "lscpu" in "C" locale to suppress translations
-      ENV["LC_ALL"] = "C"
-      ret = `lscpu`
+      ret = `LC_ALL=C lscpu`
 
       if ret.match /^Socket\(s\):\s*(\d+)\s*$/
         log.info("HW detection: detected #{$1} CPU sockets")
@@ -30,8 +27,6 @@ module SccApi
       else
         raise "CPU detection failed"
       end
-    ensure
-      ENV["LC_ALL"] = lc_all_bak
     end
 
     def self.graphics_card_vendors
