@@ -95,34 +95,11 @@ module SccApi
       target_url = params[:url]
       raise "URL parameter missing" unless target_url
 
-      headers = params[:headers] || {}
-      body = params[:body] || ""
-      method = params[:method] || :get
+      http = create_http_connection(target_url)
+      request = create_request(params[:method] || :get, target_url)
 
-      http = Net::HTTP.new(target_url.host, target_url.port)
-
-      # switch to HTTPS connection
-      if target_url.is_a? URI::HTTPS
-        http.use_ssl = true
-        http.verify_mode = insecure ? OpenSSL::SSL::VERIFY_NONE : OpenSSL::SSL::VERIFY_PEER
-        log.warn("Warning: SSL certificate verification disabled") if insecure
-      else
-        log.warn("Warning: Using insecure \"#{target_url.scheme}\" transfer protocol")
-      end
-
-      case method
-      when :post then
-        request = Net::HTTP::Post.new(target_url.request_uri)
-      when :put then
-        request = Net::HTTP::Put.new(target_url.request_uri)
-      when :get then
-        request = Net::HTTP::Get.new(target_url.request_uri)
-      else
-        raise "Unsupported HTTP method: #{method}"
-      end
-
-      JSON_HTTP_HEADER.merge(headers).each {|k,v| request[k] = v}
-      request.body = body
+      JSON_HTTP_HEADER.merge(params[:headers] || {}).each {|k,v| request[k] = v}
+      request.body = params[:body] || ""
 
       # use Basic Auth if credentials are present
       if params[:credentials]
@@ -151,6 +128,34 @@ module SccApi
         # TODO error handling
         log.error("HTTP Error: #{response.inspect}")
         raise "HTTP failed: #{response.code}: #{response.message}"
+      end
+    end
+
+    def create_http_connection(url)
+      http = Net::HTTP.new(url.host, url.port)
+
+      # switch to HTTPS connection
+      if url.is_a? URI::HTTPS
+        http.use_ssl = true
+        http.verify_mode = insecure ? OpenSSL::SSL::VERIFY_NONE : OpenSSL::SSL::VERIFY_PEER
+        log.warn("Warning: SSL certificate verification disabled") if insecure
+      else
+        log.warn("Warning: Using insecure \"#{url.scheme}\" transfer protocol")
+      end
+
+      return http
+    end
+
+    def create_request(method, url)
+      case method
+      when :post then
+        Net::HTTP::Post.new(url.request_uri)
+      when :put then
+        Net::HTTP::Put.new(url.request_uri)
+      when :get then
+        Net::HTTP::Get.new(url.request_uri)
+      else
+        raise "Unsupported HTTP method: #{method}"
       end
     end
 
