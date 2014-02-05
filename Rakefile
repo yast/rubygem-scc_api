@@ -27,7 +27,7 @@ begin
 
   desc "Run tests"
   RSpec::Core::RakeTask.new("test") do |t|
-    t.pattern ="test/**/*.rb"
+    t.pattern = "test/**/*{_test,_spec}.rb"
   end
 rescue LoadError
   puts "RSpec not available, install it with 'gem install rspec' command" if verbose == true
