@@ -95,17 +95,22 @@ module SccApi
       target_url = params[:url]
       raise "URL parameter missing" unless target_url
 
-      http = create_http_connection(target_url)
-      request = create_request(params[:method] || :get, target_url)
+      # set defaults
+      params[:method] ||= :get
+      params[:headers] ||= {}
+      params[:body] ||= ""
 
-      JSON_HTTP_HEADER.merge(params[:headers] || {}).each {|k,v| request[k] = v}
-      request.body = params[:body] || ""
+      http = create_http_connection(target_url)
+      request = create_request(params[:method], target_url)
+
+      JSON_HTTP_HEADER.merge(params[:headers]).each {|k,v| request[k] = v}
+      request.body = params[:body]
 
       # use Basic Auth if credentials are present
-      if params[:credentials]
-        request.basic_auth(params[:credentials].username, params[:credentials].password)
-      end
+      credentials = params[:credentials]
+      request.basic_auth(credentials.username, credentials.password) if credentials
 
+      # send the HTTP request
       response = http.request(request)
 
       case response
@@ -147,16 +152,15 @@ module SccApi
     end
 
     def create_request(method, url)
-      case method
-      when :post then
-        Net::HTTP::Post.new(url.request_uri)
-      when :put then
-        Net::HTTP::Put.new(url.request_uri)
-      when :get then
-        Net::HTTP::Get.new(url.request_uri)
+      request_class = case method
+      when :post then Net::HTTP::Post
+      when :put  then Net::HTTP::Put
+      when :get  then Net::HTTP::Get
       else
         raise "Unsupported HTTP method: #{method}"
       end
+
+      request_class.new(url.request_uri)
     end
 
   end
