@@ -56,7 +56,7 @@ module SccApi
       # used for error messages
 
       params = {
-        :url => URI(url + "/announce"),
+        :url => URI(url + "/subscriptions/systems"),
         :headers => {"Authorization" => "Token token=\"#{reg_code}\""},
         :body => body,
         :method => :post
@@ -76,7 +76,7 @@ module SccApi
       }.to_json
 
       params = {
-        :url => URI(url + "/activate"),
+        :url => URI(url + "/systems/products"),
         :body => body,
         :method => :post,
         :credentials => credentials
