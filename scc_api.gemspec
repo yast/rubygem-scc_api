@@ -34,6 +34,7 @@ Gem::Specification.new do |s|
   s.homepage = "http://github.com/yast/rubygem-scc_api"
   s.licenses = ["GPL-2.0", "Ruby"]
   s.platform = Gem::Platform::RUBY
+  s.required_ruby_version = ">= 2.0.0"
   s.required_rubygems_version = ">= 1.3.6"
 
   s.add_development_dependency "rspec"
