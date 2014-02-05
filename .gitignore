@@ -6,3 +6,4 @@ scc_api-*.gem
 Gemfile.lock
 /nbproject/private/
 /.yardoc
+/coverage/

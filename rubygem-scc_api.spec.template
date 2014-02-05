@@ -25,6 +25,12 @@ Group:          Development/Languages/Ruby
 License:        GPL-2.0 or Ruby
 #
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
+
+# provides "lscpu" - for HW detection
+Requires:       util-linux
+# provides "lspci" - for HW detection
+Requires:       pciutils
+
 BuildRequires:  rubygems_with_buildroot_patch
 %rubygems_requires
 BuildRequires:  rubygem-rspec

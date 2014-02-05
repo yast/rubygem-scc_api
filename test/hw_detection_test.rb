@@ -1,14 +1,10 @@
 #!/usr/bin/env rspec
 
-$LOAD_PATH.unshift File.expand_path("../../lib", __FILE__)
+require_relative "spec_helper"
 
 require "scc_api/hw_detection"
 
-def fixtures_dir
-  File.expand_path("../fixtures", __FILE__)
-end
-
-describe "SccApi::HwDetection" do
+describe SccApi::HwDetection do
   describe ".cpu_sockets" do
     it "returns CPU sockets number" do
       SccApi::HwDetection.should_receive(:'`').with("lscpu").and_return(File.read("#{fixtures_dir}/lscpu_1_socket.out"))
