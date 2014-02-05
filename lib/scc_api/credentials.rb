@@ -16,11 +16,11 @@ module SccApi
 
     attr_reader :username, :password, :service, :file
 
-    def initialize(user, password, service, file = nil)
+    def initialize(user, password, service, options = {})
       @username = user
       @password = password
       @service = service
-      @file = file
+      @file = options[:file]
     end
 
     def self.read(file)
@@ -28,7 +28,7 @@ module SccApi
 
       user, passwd = parse(content)
       log.info("Reading credentials from #{file}")
-      credentials = Credentials.new(user, passwd, service_name(file), file)
+      credentials = Credentials.new(user, passwd, service_name(file), { :file => file })
       log.debug("Read credentials: #{credentials}")
       credentials
     end
