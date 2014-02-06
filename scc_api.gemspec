@@ -8,6 +8,7 @@ Gem::Specification.new do |s|
     "README.md",
     "Rakefile",
     "VERSION",
+    "LICENSE",
     "lib/scc_api.rb",
     "lib/scc_api/connection.rb",
     "lib/scc_api/credentials.rb",
