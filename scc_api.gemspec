@@ -6,29 +6,16 @@ Gem::Specification.new do |s|
   s.files = [
     "Gemfile",
     "README.md",
+    "README-for-developers.md",
     "Rakefile",
     "VERSION",
     "LICENSE",
-    "lib/scc_api.rb",
-    "lib/scc_api/connection.rb",
-    "lib/scc_api/credentials.rb",
-    "lib/scc_api/hw_detection.rb",
-    "lib/scc_api/logger.rb",
     "scc_api.gemspec",
-    ]
-  s.test_files = [
-    "test/fixtures/lscpu_1_socket.out",
-    "test/fixtures/lspci_intel_gfx.out",
-    "test/fixtures/lspci_no_gfx.out",
-    "test/fixtures/SUSE_SLES_credentials",
-    "test/spec_helper.rb",
-    "test/hw_detection_test.rb",
-    "test/scc_test.rb",
-    "test/credentials_test.rb",
-  ]
+    ] + Dir["lib/**/*"]
+  s.test_files = Dir["test/**/*"]
   s.require_path = 'lib'
   s.has_rdoc = true
-  s.extra_rdoc_files = ["README.md"]
+  s.extra_rdoc_files = ["README.md", "README-for-developers.md"]
   s.rdoc_options = ['--line-numbers', "--main", "README"]
   s.authors = ["Ladislav Slezak"]
   s.email = "lslezak@suse.cz"
