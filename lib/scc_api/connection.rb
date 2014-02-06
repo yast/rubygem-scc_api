@@ -67,6 +67,8 @@ module SccApi
       self.credentials = SccApi::Credentials.new(result["login"], result["password"])
     end
 
+    # Register the product and get the services assigned to it
+    # @return [ProductServices] registered product services
     def register(base_product)
       body = {
         "token" => reg_code,
@@ -82,7 +84,10 @@ module SccApi
         :credentials => credentials
       }
 
-      json_http_handler(params)
+      services = json_http_handler(params)
+      log.info "Registered services: #{services}"
+
+      return ProductServices.from_hash(services)
     end
 
     private
