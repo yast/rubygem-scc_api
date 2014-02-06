@@ -19,13 +19,13 @@ describe SccApi::HwDetection do
 
   describe ".graphics_card_vendors" do
     it "returns graphics cards vendors" do
-      SccApi::HwDetection.should_receive(:'`').with("lspci -n -vmm").and_return(File.read("#{fixtures_dir}/lspci_intel_gfx.out"))
+      SccApi::HwDetection.should_receive(:'`').with("/sbin/lspci -n -vmm").and_return(File.read("#{fixtures_dir}/lspci_intel_gfx.out"))
       returned = SccApi::HwDetection.graphics_card_vendors
       expect(returned).to eq(["intel"]), "Detected graphics cards vendors: '#{returned}'"
     end
 
     it "returns no graphics cards vendors" do
-      SccApi::HwDetection.should_receive(:'`').with("lspci -n -vmm").and_return(File.read("#{fixtures_dir}/lspci_no_gfx.out"))
+      SccApi::HwDetection.should_receive(:'`').with("/sbin/lspci -n -vmm").and_return(File.read("#{fixtures_dir}/lspci_no_gfx.out"))
       returned = SccApi::HwDetection.graphics_card_vendors
       expect(returned).to eq([]), "Detected graphics cards vendors: '#{returned}'"
     end
