@@ -22,7 +22,7 @@ Release:        0
 %define mod_name scc_api
 #
 Group:          Development/Languages/Ruby
-License:        GPL-2.0 or Ruby
+License:        LGPL-2.1
 #
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 
@@ -46,7 +46,7 @@ This rubygem provides easy access to the SUSE Customer Center API.
 %package doc
 Summary:        RDoc documentation for %{mod_name}
 Group:          Development/Languages/Ruby
-License:        GPL-2.0 or Ruby
+License:        LGPL-2.1
 Requires:       %{name} = %{version}
 %description doc
 Documentation generated at gem installation time.
@@ -56,7 +56,7 @@ Usually in RDoc and RI formats.
 %package testsuite
 Summary:        Test suite for %{mod_name}
 Group:          Development/Languages/Ruby
-License:        GPL-2.0 or Ruby
+License:        LGPL-2.1
 Requires:       %{name} = %{version}
 %description testsuite
 Test::Unit or RSpec files, useful for developers.
