@@ -32,7 +32,7 @@ Gem::Specification.new do |s|
   s.authors = ["Ladislav Slezak"]
   s.email = "lslezak@suse.cz"
   s.homepage = "http://github.com/yast/rubygem-scc_api"
-  s.licenses = ["GPL-2.0", "Ruby"]
+  s.licenses = ["LGPL-2.1"]
   s.platform = Gem::Platform::RUBY
   s.required_ruby_version = ">= 2.0.0"
   s.required_rubygems_version = ">= 1.3.6"
