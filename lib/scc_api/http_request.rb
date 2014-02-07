@@ -91,7 +91,6 @@ module SccApi
 
     def initialize(base_url, reg_code, product, credentials)
       target_url = URI(base_url + URL_PATH),
-      product ||= {}
       
       body = {
         "product_ident" => product["name"],
