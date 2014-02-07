@@ -26,7 +26,7 @@ module SccApi
     # URL can be changed during redirection
     attr_accessor :url
 
-    def initialize(url, headers: {}, body: "", method: :get, credentials: nil)
+    def initialize(url, headers: {}, body: nil, method: :get, credentials: nil)
       @url = url
       @headers = headers
       @body = body
@@ -39,8 +39,7 @@ module SccApi
     def create_request
       request = http_request(url, method)
       JSON_HTTP_HEADER.merge(headers).each {|k,v| request[k] = v}
-      request.body = body
-      
+      request.body = body.to_json if body
       request.basic_auth(credentials.username, credentials.password) if credentials
       
       return request
@@ -75,7 +74,7 @@ module SccApi
         "email" => email,
         "hostname" => Socket.gethostname,
         "hwinfo" => HWDetection.collect_hw_data
-      }.to_json
+      }
       log.info("Announce data: #{body}")
     
       # set headers
@@ -98,7 +97,7 @@ module SccApi
         "product_ident" => product["name"],
         "product_version" => product["version"],
         "arch" => product["arch"]
-      }.to_json
+      }
 
       # do not log the registration code
       log.info("Registration data: #{body}")
