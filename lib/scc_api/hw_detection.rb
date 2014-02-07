@@ -33,7 +33,9 @@ module SccApi
       # only PCI cards are supported (for others we cannot provide driver repos anyway)
       # -n = numeric IDs
       # -vmm = machine readable format
-      pci_out = `/sbin/lspci -n -vmm`
+      # add "/sbin" to the end of $PATH to be sure that "lspci" is found
+      # when not running as root
+      pci_out = `PATH="$PATH":/sbin lspci -n -vmm`
 
       # the devices are separated by empty line
       result = pci_out.split(/^$/).reduce([]) do |result, pci_device|
