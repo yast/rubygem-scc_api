@@ -5,6 +5,7 @@
 require "socket"
 require "uri"
 require "net/http"
+require "json"
 
 require "scc_api/hw_detection"
 require "scc_api/logger"
@@ -73,7 +74,7 @@ module SccApi
       body = {
         "email" => email,
         "hostname" => Socket.gethostname,
-        "hwinfo" => HWDetection.collect_hw_data
+        "hwinfo" => HwDetection.collect_hw_data
       }
       log.info("Announce data: #{body}")
     
@@ -90,7 +91,7 @@ module SccApi
     URL_PATH = "/systems/products"
 
     def initialize(base_url, reg_code, product, credentials)
-      target_url = URI(base_url + URL_PATH),
+      target_url = URI(base_url + URL_PATH)
       
       body = {
         "product_ident" => product["name"],
