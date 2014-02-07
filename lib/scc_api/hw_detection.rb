@@ -52,15 +52,15 @@ module SccApi
 
       return result
     end
-  end
 
-  def self.collect_hw_data
-    # TODO FIXME: check the expected structure
-    {
-      "sockets" => HwDetection.cpu_sockets,
-      # TODO FIXME: the API supports only a single vendor, change it to list?
-      "graphics" => HwDetection.graphics_card_vendors.first
-    }
+    def self.collect_hw_data
+      # TODO FIXME: check the expected structure
+      {
+        "sockets" => HwDetection.cpu_sockets,
+        # TODO FIXME: the API supports only a single vendor, change it to list?
+        "graphics" => HwDetection.graphics_card_vendors.first
+      }
+    end
   end
 
 end
