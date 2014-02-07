@@ -30,4 +30,14 @@ describe SccApi::HwDetection do
       expect(returned).to eq([]), "Detected graphics cards vendors: '#{returned}'"
     end
   end
+
+  describe ".collect_hw_data" do
+    it "collects all hardware data" do
+      SccApi::HwDetection.should_receive(:'`').with('PATH="$PATH":/sbin lspci -n -vmm').and_return(File.read("#{fixtures_dir}/lspci_intel_gfx.out"))
+      SccApi::HwDetection.should_receive(:'`').with("LC_ALL=C lscpu").and_return(File.read("#{fixtures_dir}/lscpu_1_socket.out"))
+      returned = SccApi::HwDetection.collect_hw_data
+      expect(returned).to eq({"sockets" => 1, "graphics" => "intel"})
+    end
+  end
+
 end
