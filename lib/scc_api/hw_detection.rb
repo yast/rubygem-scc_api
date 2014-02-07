@@ -33,7 +33,9 @@ module SccApi
       # only PCI cards are supported (for others we cannot provide driver repos anyway)
       # -n = numeric IDs
       # -vmm = machine readable format
-      pci_out = `lspci -n -vmm`
+      # add "/sbin" to the end of $PATH to be sure that "lspci" is found
+      # when not running as root
+      pci_out = `PATH="$PATH":/sbin lspci -n -vmm`
 
       # the devices are separated by empty line
       result = pci_out.split(/^$/).reduce([]) do |result, pci_device|
@@ -50,6 +52,15 @@ module SccApi
 
       return result
     end
+  end
+
+  def self.collect_hw_data
+    # TODO FIXME: check the expected structure
+    {
+      "sockets" => HwDetection.cpu_sockets,
+      # TODO FIXME: the API supports only a single vendor, change it to list?
+      "graphics" => HwDetection.graphics_card_vendors.first
+    }
   end
 
 end

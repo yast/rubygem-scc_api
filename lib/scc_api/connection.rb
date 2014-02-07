@@ -1,15 +1,14 @@
 # encoding: utf-8
 
-require "scc_api/hw_detection"
 require "scc_api/credentials"
 require "scc_api/logger"
+require "scc_api/http_request"
 
 require "json"
 
 # network related libs
 require "uri"
 require "net/http"
-require "socket"
 
 module SccApi
 
@@ -24,11 +23,6 @@ module SccApi
 
     MAX_REDIRECTS = 10
 
-    JSON_HTTP_HEADER = {
-      "Content-Type" => "application/json",
-      "Accept" => "application/json"
-    }
-
     def initialize(email, reg_code)
       self.url = DEFAULT_SCC_URL
       self.insecure = false
@@ -38,53 +32,17 @@ module SccApi
 
     # initial registration via API
     def announce
-      body = {
-        "email" => email,
-        "hostname" => Socket.gethostname,
-        "hwinfo" => {
-          # TODO FIXME: check the expected structure
-          "sockets" => SccApi::HwDetection.cpu_sockets,
-          # TODO FIXME: the API supports only a single vendor, change it to list?
-          "graphics" => SccApi::HwDetection.graphics_card_vendors.first
-        }
-      }.to_json
-
-      log.info("Sending announce data: #{body}")
-
-      # see https://github.com/SUSE/happy-customer/wiki/Connect-API#wiki-sys_create
-      # TODO FIXME: set "Accept-Language" HTTP header to set the language
-      # used for error messages
-
-      params = {
-        :url => URI(url + "/subscriptions/systems"),
-        :headers => {"Authorization" => "Token token=\"#{reg_code}\""},
-        :body => body,
-        :method => :post
-      }
-
-      result = json_http_handler(params)
+      request = AnnounceRequest.new(url, email, reg_code)
+      result = json_http_handler(request)
 
       self.credentials = SccApi::Credentials.new(result["login"], result["password"])
     end
 
     # Register the product and get the services assigned to it
     # @return [ProductServices] registered product services
-    def register(base_product)
-      body = {
-        "token" => reg_code,
-        "product_ident" => base_product["name"],
-        "product_version" => base_product["version"],
-        "arch" => base_product["arch"]
-      }.to_json
-
-      params = {
-        :url => URI(url + "/systems/products"),
-        :body => body,
-        :method => :post,
-        :credentials => credentials
-      }
-
-      services = json_http_handler(params)
+    def register(product)
+      request = RegisterRequest.new(url, reg_code, product, credentials)
+      services = json_http_handler(request)
       log.info "Registered services: #{services}"
 
       return ProductServices.from_hash(services)
@@ -94,29 +52,12 @@ module SccApi
 
     # generic HTTP(S) transfer for JSON requests/responses
     # TODO: proxy support? (http://apidock.com/ruby/Net/HTTP)
-    def json_http_handler(params, redirect_count = MAX_REDIRECTS)
+    def json_http_handler(request, redirect_count = MAX_REDIRECTS)
       raise "Reached maximum number of HTTP redirects, aborting" if redirect_count == 0
 
-      target_url = params[:url]
-      raise "URL parameter missing" unless target_url
-
-      # set defaults
-      params[:method] ||= :get
-      params[:headers] ||= {}
-      params[:body] ||= ""
-
-      http = create_http_connection(target_url)
-      request = create_request(params[:method], target_url)
-
-      JSON_HTTP_HEADER.merge(params[:headers]).each {|k,v| request[k] = v}
-      request.body = params[:body]
-
-      # use Basic Auth if credentials are present
-      credentials = params[:credentials]
-      request.basic_auth(credentials.username, credentials.password) if credentials
-
+      http = create_http_connection(request.url)
       # send the HTTP request
-      response = http.request(request)
+      response = http.request(request.create_request)
 
       case response
       when Net::HTTPSuccess then
@@ -125,15 +66,15 @@ module SccApi
           log.info("Request succeeded")
           return JSON.parse(response.body)
         else
-          raise RuntimeError, "Unexpected content-type: #{response['content-type']}"
+          raise "Unexpected content-type: #{response['content-type']}"
         end
       when Net::HTTPRedirection then
         location = response['location']
-        params[:url] = URI(location)
         log.info("Redirected to #{location}")
 
-        # retry recursively
-        json_http_handler(params, redirect_count - 1)
+        # retry recursively with redirected URL
+        request.url = URI(location)
+        json_http_handler(request, redirect_count - 1)
       else
         # TODO error handling
         log.error("HTTP Error: #{response.inspect}")
@@ -154,18 +95,6 @@ module SccApi
       end
 
       return http
-    end
-
-    def create_request(method, url)
-      request_class = case method
-      when :post then Net::HTTP::Post
-      when :put  then Net::HTTP::Put
-      when :get  then Net::HTTP::Get
-      else
-        raise "Unsupported HTTP method: #{method}"
-      end
-
-      request_class.new(url.request_uri)
     end
 
   end
