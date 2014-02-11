@@ -37,9 +37,9 @@ module SccApi
       result = json_http_handler(request)
 
       # the global credentials returned by announce should be saved
-      # to /etc/zypp/repos.d/SCCCredentials file (without _ separator)
+      # to /etc/zypp/credentials.d/SCCCredentials file
       self.credentials = Credentials.new(result["login"], result["password"],
-        :file => Credentials::DEFAULT_CREDENTIALS_DIR + "/SCCCredentials")
+        Credentials::DEFAULT_CREDENTIALS_DIR + "/SCCCredentials")
     end
 
     # Register the product and get the services assigned to it
