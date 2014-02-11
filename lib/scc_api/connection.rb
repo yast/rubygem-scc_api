@@ -39,8 +39,7 @@ module SccApi
       # the global credentials returned by announce should be saved
       # to /etc/zypp/repos.d/SCCCredentials file (without _ separator)
       self.credentials = Credentials.new(result["login"], result["password"],
-        # use nil, the file name is set explicitly by the last parameter
-        nil, :file => Credentials::DEFAULT_CREDENTIALS_DIR + "/SCCCredentials")
+        :file => Credentials::DEFAULT_CREDENTIALS_DIR + "/SCCCredentials")
     end
 
     # Register the product and get the services assigned to it

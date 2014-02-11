@@ -23,7 +23,7 @@ describe SccApi::Credentials do
 
   describe "#write" do
     it "creates a credentials file accessible only by user" do
-      credentials = SccApi::Credentials.new("name", "1234", "SLES")
+      credentials = SccApi::Credentials.new("name", "1234", :service => "SLES")
       original_file = credentials.file
 
       # use a tmpdir for writing the file
@@ -39,8 +39,13 @@ describe SccApi::Credentials do
       end
     end
 
+    it "raises an error when service name neither file name is set" do
+      credentials = SccApi::Credentials.new("name", "1234")
+      expect {credentials.write()}.to raise_error
+    end
+
     it "the written file can be read back" do
-      credentials = SccApi::Credentials.new("name", "1234", "SLES")
+      credentials = SccApi::Credentials.new("name", "1234", :service => "SLES")
 
       # use a tmpdir for writing the file
       Dir.mktmpdir do |dir|
@@ -60,7 +65,7 @@ describe SccApi::Credentials do
       user = "USER"
       service = "SERVICE"
       password = "*eiW0yie2*"
-      credentials_str = SccApi::Credentials.new(user, password, service).to_s
+      credentials_str = SccApi::Credentials.new(user, password, :service => service).to_s
       expect(credentials_str).not_to include(password), "The password is logged"
       expect(credentials_str).to include(user)
       expect(credentials_str).to include(service)

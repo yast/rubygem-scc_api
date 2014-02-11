@@ -16,10 +16,10 @@ module SccApi
 
     attr_reader :username, :password, :service, :file
 
-    def initialize(user, password, service, options = {})
+    def initialize(user, password, options = {})
       @username = user
       @password = password
-      @service = service
+      @service = options[:service]
       @file = options[:file]
     end
 
@@ -28,7 +28,7 @@ module SccApi
 
       user, passwd = parse(content)
       log.info("Reading credentials from #{file}")
-      credentials = Credentials.new(user, passwd, service_name(file), { :file => file })
+      credentials = Credentials.new(user, passwd, { :file => file, :service => service_name(file) })
       log.debug("Read credentials: #{credentials}")
       credentials
     end
@@ -61,6 +61,7 @@ module SccApi
 
     def file_path(dir = nil)
       dir ||= DEFAULT_CREDENTIALS_DIR
+      raise "Missing service name, cannot create service file name" unless service
       File.join(dir, service + BASEFILE_SUFFIX)
     end
 
