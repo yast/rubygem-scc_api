@@ -34,7 +34,7 @@ describe SccApi::RegisterRequest do
     it "sends product data and registration code in body" do
       url = "https://example.com/connect"
       product = {"name" => "SUSE_SLES", "arch" => "x86_64", "version" => "12"}
-      credentials = SccApi::Credentials.new("user", "password", "SUSE_SLES")
+      credentials = SccApi::Credentials.new("user", "password", product["name"])
       regcode = "reg_code"
 
       request = SccApi::RegisterRequest.new(url, regcode, product, credentials)
