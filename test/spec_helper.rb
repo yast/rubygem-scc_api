@@ -5,8 +5,8 @@ begin
 
   # ignore coverage in tests
   SimpleCov.add_filter "/test/"
-  # less than 60% code covarage triggers a failure
-  SimpleCov.minimum_coverage 60
+  # less than 95% code covarage triggers a failure
+  SimpleCov.minimum_coverage 95
 
   # use coveralls for on-line code coverage reporting at Travis CI
   if ENV["TRAVIS"]

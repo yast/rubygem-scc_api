@@ -9,6 +9,7 @@ require "json"
 # network related libs
 require "uri"
 require "net/http"
+require "openssl"
 
 module SccApi
 
@@ -35,7 +36,11 @@ module SccApi
       request = AnnounceRequest.new(url, email, reg_code)
       result = json_http_handler(request)
 
-      self.credentials = SccApi::Credentials.new(result["login"], result["password"])
+      # the global credentials returned by announce should be saved
+      # to /etc/zypp/repos.d/SCCCredentials file (without _ separator)
+      self.credentials = Credentials.new(result["login"], result["password"],
+        # use nil, the file name is set explicitly by the last parameter
+        nil, :file => Credentials::DEFAULT_CREDENTIALS_DIR + "/SCCCredentials")
     end
 
     # Register the product and get the services assigned to it
@@ -61,12 +66,13 @@ module SccApi
 
       case response
       when Net::HTTPSuccess then
-        # FIXME: better test the type, this looks fragile...
-        if response["content-type"] == "application/json; charset=utf-8"
+        # .content_type removes the optional attribues
+        # e.g. "application/json; charset=utf-8" => "application/json"
+        if response.content_type == "application/json"
           log.info("Request succeeded")
           return JSON.parse(response.body)
         else
-          raise "Unexpected content-type: #{response['content-type']}"
+          raise "Unexpected content-type: #{response.content_type}"
         end
       when Net::HTTPRedirection then
         location = response['location']
