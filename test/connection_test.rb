@@ -13,6 +13,7 @@ describe SccApi::Connection do
     @redirection["location"] = "http://redirected.com"
 
     @connection = SccApi::Connection.new("email", "reg_code")
+    @connection.url = "http://example.com/connection"
 
     SccApi::HwDetection.stub(:collect_hw_data).and_return({"sockets" => 1, "graphics" => "unknown"})
   end
@@ -48,9 +49,7 @@ describe SccApi::Connection do
       Net::HTTP.stub(:new).and_return(http)
       http.stub(:request).and_return(@redirection)
 
-      connection = SccApi::Connection.new("email", "reg_code")
-
-      expect {connection.announce}.to raise_error(RuntimeError)
+      expect {@connection.announce}.to raise_error(RuntimeError)
     end
 
 
@@ -63,6 +62,8 @@ describe SccApi::Connection do
       Net::HTTP.any_instance.should_receive(:verify_mode=).with(OpenSSL::SSL::VERIFY_PEER)
 
       @connection.url = "https://example.com"
+      # TODO FIXME: should not be needed after fixing the default
+      @connection.insecure = false
       @connection.announce()
     end
 
