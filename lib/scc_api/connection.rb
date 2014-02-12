@@ -19,14 +19,15 @@ module SccApi
 
     attr_accessor :url, :email, :reg_code, :insecure, :credentials
 
-    # FIXME: internal testing SCC instance, change to the public production server later
-    DEFAULT_SCC_URL = "http://10.122.166.25:3000/connect"
+    # default URL used for registration
+    DEFAULT_SCC_URL = "https://scc.suse.com/connect"
 
     MAX_REDIRECTS = 10
 
     def initialize(email, reg_code)
       self.url = DEFAULT_SCC_URL
-      self.insecure = false
+      # TODO FIXME: inst-sys does not contain CA certificates, temporily disable SSL verification
+      self.insecure = true
       self.email = email
       self.reg_code = reg_code
     end
