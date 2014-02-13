@@ -62,8 +62,6 @@ describe SccApi::Connection do
       Net::HTTP.any_instance.should_receive(:verify_mode=).with(OpenSSL::SSL::VERIFY_PEER)
 
       @connection.url = "https://example.com"
-      # TODO FIXME: should not be needed after fixing the default
-      @connection.insecure = false
       @connection.announce()
     end
 
