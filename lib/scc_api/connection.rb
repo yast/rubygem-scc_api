@@ -26,8 +26,7 @@ module SccApi
 
     def initialize(email, reg_code)
       self.url = DEFAULT_SCC_URL
-      # TODO FIXME: inst-sys does not contain CA certificates, temporily disable SSL verification
-      self.insecure = true
+      self.insecure = false
       self.email = email
       self.reg_code = reg_code
     end
