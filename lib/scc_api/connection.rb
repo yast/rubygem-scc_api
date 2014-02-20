@@ -83,6 +83,7 @@ module SccApi
       else
         # TODO error handling
         log.error("HTTP Error: #{response.inspect}")
+        log.info("Response body: #{response.body}")
         raise "HTTP failed: #{response.code}: #{response.message}"
       end
     end

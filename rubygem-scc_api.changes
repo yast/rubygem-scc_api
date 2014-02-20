@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Thu Feb 20 10:02:00 UTC 2014 - jreidinger@suse.com
+
+- log also error response body content for easier debugging
+- 0.2.2
+
+-------------------------------------------------------------------
 Thu Feb 13 11:10:57 UTC 2014 - lslezak@suse,cz
 
 - make secure SSL connections by default (removed SSL workaround
