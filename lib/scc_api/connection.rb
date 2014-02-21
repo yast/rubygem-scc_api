@@ -3,6 +3,8 @@
 require "scc_api/credentials"
 require "scc_api/logger"
 require "scc_api/http_request"
+require "scc_api/exceptions"
+require "scc_api/product_services"
 
 require "json"
 
@@ -82,12 +84,21 @@ module SccApi
         # retry recursively with redirected URL
         request.url = URI(location)
         json_http_handler(request, redirect_count - 1)
+      when Net::HTTPUnauthorized then
+        raise NotAuthorized.new
+      # 422 use SCC to report errors with registration
+      when Net::HTTPUnprocessableEntity then
+        log.error("SCC returns 422")
+        log.info("Response body: #{response.body}")
+        raise ErrorResponse.new(response)
       else
-        # TODO error handling
         log.error("HTTP Error: #{response.inspect}")
         log.info("Response body: #{response.body}")
         raise "HTTP failed: #{response.code}: #{response.message}"
       end
+    #raise nice exception if there is no network connection
+    rescue SocketError
+      raise SccApi::NoNetworkError
     end
 
     def create_http_connection(url)
