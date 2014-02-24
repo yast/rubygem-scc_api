@@ -33,7 +33,7 @@ module SccApi
 
     # initial registration via API
     def announce
-      request = AnnounceRequest.new(url, email, reg_code)
+      request = AnnounceRequest.new(self)
       result = json_http_handler(request)
 
       # the global credentials returned by announce should be saved
@@ -45,7 +45,7 @@ module SccApi
     # Register the product and get the services assigned to it
     # @return [ProductServices] registered product services
     def register(product)
-      request = RegisterRequest.new(url, reg_code, product, credentials)
+      request = RegisterRequest.new(self, product)
       services = json_http_handler(request)
       log.info "Registered services: #{services}"
 

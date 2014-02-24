@@ -23,16 +23,16 @@ module SccApi
       "Accept" => "application/json"
     }
 
-    attr_reader :headers, :body, :method, :credentials
+    attr_reader :headers, :body, :method, :connection
     # URL can be changed during redirection
     attr_accessor :url
 
-    def initialize(url, headers: {}, body: nil, method: :get, credentials: nil)
+    def initialize(url, connection, headers: {}, body: nil, method: :get)
       @url = url
+      @connection = connection
       @headers = headers
       @body = body
       @method = method
-      @credentials = credentials
     end
 
     # create Net::HTTP::* request object for real HTTP communication
@@ -41,7 +41,7 @@ module SccApi
       request = http_request(url, method)
       JSON_HTTP_HEADER.merge(headers).each {|k,v| request[k] = v}
       request.body = body.to_json if body
-      request.basic_auth(credentials.username, credentials.password) if credentials
+      request.basic_auth(connection.credentials.username, connection.credentials.password) if connection.credentials
       
       return request
     end
@@ -68,20 +68,20 @@ module SccApi
   class AnnounceRequest < HttpRequest
     URL_PATH = "/subscriptions/systems"
 
-    def initialize(base_url, email, reg_code)
-      target_url = URI(base_url + URL_PATH)
+    def initialize(connection)
+      target_url = URI(connection.url + URL_PATH)
 
       body = {
-        "email" => email,
+        "email" => connection.email,
         "hostname" => Socket.gethostname,
         "hwinfo" => HwDetection.collect_hw_data
       }
       log.info("Announce data: #{body}")
     
       # set headers
-      headers = {"Authorization" => "Token token=\"#{reg_code}\""}
+      headers = {"Authorization" => "Token token=\"#{connection.reg_code}\""}
       
-      super(target_url, headers: headers, body: body, method: :post)
+      super(target_url, connection, headers: headers, body: body, method: :post)
     end
   end
 
@@ -90,8 +90,8 @@ module SccApi
   class RegisterRequest < HttpRequest
     URL_PATH = "/systems/products"
 
-    def initialize(base_url, reg_code, product, credentials)
-      target_url = URI(base_url + URL_PATH)
+    def initialize(connection, product)
+      target_url = URI(connection.url + URL_PATH)
       
       body = {
         "product_ident" => product["name"],
@@ -101,9 +101,9 @@ module SccApi
 
       # do not log the registration code
       log.info("Registration data: #{body}")
-      body["token"] = reg_code
+      body["token"] = connection.reg_code
 
-      super(target_url, body: body, method: :post, credentials: credentials)
+      super(target_url, connection, body: body, method: :post)
     end
   end
 end
