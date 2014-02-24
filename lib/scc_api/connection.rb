@@ -17,7 +17,9 @@ module SccApi
   class Connection
     include Logger
 
-    attr_accessor :url, :email, :reg_code, :insecure, :credentials
+    # @see http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.4 for expected
+    # language value
+    attr_accessor :url, :email, :reg_code, :insecure, :credentials, :language
 
     # default URL used for registration
     DEFAULT_SCC_URL = "https://scc.suse.com/connect"

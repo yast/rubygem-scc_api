@@ -40,6 +40,7 @@ module SccApi
     def create_request
       request = http_request(url, method)
       JSON_HTTP_HEADER.merge(headers).each {|k,v| request[k] = v}
+      request["Accept-Language"] = connection.language if connection.language
       request.body = body.to_json if body
       request.basic_auth(connection.credentials.username, connection.credentials.password) if connection.credentials
       

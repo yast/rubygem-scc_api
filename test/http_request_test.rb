@@ -95,6 +95,18 @@ describe SccApi::HttpRequest do
       expect(http_request.content_type).to eq("application/json")
       expect(http_request.body).to eq(body.to_json)
     end
+
+    it "does not send Accept-Language header if a language is not set" do
+      request = SccApi::HttpRequest.new(@url, @connection)
+      expect(request.create_request["Accept-Language"]).to be_nil
+    end
+
+    it "sends Accept-Language header if a language is set" do
+      @connection.language = "cs-CZ"
+      request = SccApi::HttpRequest.new(@url, @connection)
+      expect(request.create_request.fetch("Accept-Language")).to eq("cs-CZ")
+    end
+
   end
 
 end
