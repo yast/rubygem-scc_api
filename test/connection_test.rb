@@ -49,7 +49,7 @@ describe SccApi::Connection do
       Net::HTTP.stub(:new).and_return(http)
       http.stub(:request).and_return(@redirection)
 
-      expect {@connection.announce}.to raise_error(RuntimeError)
+      expect {@connection.announce}.to raise_error(RuntimeError, /^Reached maximum number of HTTP redirects/)
     end
 
 
@@ -80,12 +80,13 @@ describe SccApi::Connection do
 
     it "raises exception on HTTP error" do
       response = Net::HTTPClientError.new("1.1", 422, "Error")
+      response.should_receive(:body).and_return("")
 
       Net::HTTP.any_instance.should_receive(:request)
         .with(an_instance_of(Net::HTTP::Post)).and_return(response)
 
       connection = SccApi::Connection.new("email", "reg_code")
-      expect{ connection.announce() }.to raise_error
+      expect{ connection.announce() }.to raise_error(RuntimeError, /^HTTP failed:/)
     end
 
     it "raises exception on unsupported Content-Type" do
@@ -96,7 +97,7 @@ describe SccApi::Connection do
         .with(an_instance_of(Net::HTTP::Post)).and_return(response)
 
       connection = SccApi::Connection.new("email", "reg_code")
-      expect{ connection.announce() }.to raise_error
+      expect{ connection.announce() }.to raise_error(RuntimeError, /^Unexpected content-type/)
     end
   end
 

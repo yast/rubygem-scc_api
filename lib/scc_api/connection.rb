@@ -17,7 +17,9 @@ module SccApi
   class Connection
     include Logger
 
-    attr_accessor :url, :email, :reg_code, :insecure, :credentials
+    # @see http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.4 for expected
+    # language value
+    attr_accessor :url, :email, :reg_code, :insecure, :credentials, :language
 
     # default URL used for registration
     DEFAULT_SCC_URL = "https://scc.suse.com/connect"
@@ -33,7 +35,7 @@ module SccApi
 
     # initial registration via API
     def announce
-      request = AnnounceRequest.new(url, email, reg_code)
+      request = AnnounceRequest.new(self)
       result = json_http_handler(request)
 
       # the global credentials returned by announce should be saved
@@ -45,7 +47,7 @@ module SccApi
     # Register the product and get the services assigned to it
     # @return [ProductServices] registered product services
     def register(product)
-      request = RegisterRequest.new(url, reg_code, product, credentials)
+      request = RegisterRequest.new(self, product)
       services = json_http_handler(request)
       log.info "Registered services: #{services}"
 
