@@ -94,7 +94,7 @@ module SccApi
       else
         log.error("HTTP Error: #{response.inspect}")
         log.info("Response body: #{response.body}")
-        raise "HTTP failed: #{response.code}: #{response.message}"
+        raise SccApi::HttpError.new(response)
       end
     #raise nice exception if there is no network connection
     rescue SocketError

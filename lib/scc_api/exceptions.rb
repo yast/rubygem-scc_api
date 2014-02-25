@@ -27,4 +27,14 @@ module SccApi
       super "HTTP Redirection limit reached"
     end
   end
+
+  class HttpError < RuntimeError
+    attr_reader :response
+
+    def initialize(response)
+      super "HTTP Error"
+      @response = response
+    end
+  end
+
 end

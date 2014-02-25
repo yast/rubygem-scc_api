@@ -41,7 +41,6 @@ describe SccApi::Connection do
     end
 
     it "raises SccApi::NoNetworkError when there is no network connection" do
-
       Net::HTTP.any_instance.should_receive(:request)
         .with(an_instance_of(Net::HTTP::Post)).and_raise(SocketError)
 
@@ -49,6 +48,16 @@ describe SccApi::Connection do
       expect{ connection.send(method, *args) }.to raise_error(SccApi::NoNetworkError)
     end
 
+    it "raises SccApi::HttpError on server side error" do
+      response = Net::HTTPServerError.new("1.1", 500, "Error")
+      response.should_receive(:body).and_return("")
+
+      Net::HTTP.any_instance.should_receive(:request)
+        .with(an_instance_of(Net::HTTP::Post)).and_return(response)
+
+      connection = SccApi::Connection.new("email", "reg_code")
+      expect{ connection.send(method, *args) }.to raise_error(SccApi::HttpError)
+    end
 
     it "raises RuntimeError on unsupported Content-Type" do
       response = Net::HTTPSuccess.new("1.1", 200, "OK")
