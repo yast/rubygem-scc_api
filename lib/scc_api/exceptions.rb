@@ -11,7 +11,7 @@ module SccApi
 
   class NotAuthorized < RuntimeError
     def initialize
-      super "SCC do not accept given credentials"
+      super "SCC did not accept the given credentials"
     end
   end
 

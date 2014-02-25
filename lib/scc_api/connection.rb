@@ -1,9 +1,9 @@
 # encoding: utf-8
 
 require "scc_api/credentials"
-require "scc_api/logger"
-require "scc_api/http_request"
 require "scc_api/exceptions"
+require "scc_api/http_request"
+require "scc_api/logger"
 require "scc_api/product_services"
 
 require "json"
@@ -85,12 +85,12 @@ module SccApi
         request.url = URI(location)
         json_http_handler(request, redirect_count - 1)
       when Net::HTTPUnauthorized then
-        raise NotAuthorized.new
+        raise SccApi::NotAuthorized
       # 422 use SCC to report errors with registration
       when Net::HTTPUnprocessableEntity then
         log.error("SCC returns 422")
         log.info("Response body: #{response.body}")
-        raise ErrorResponse.new(response)
+        raise SccApi::ErrorResponse.new(response)
       else
         log.error("HTTP Error: #{response.inspect}")
         log.info("Response body: #{response.body}")
