@@ -1,8 +1,10 @@
 # encoding: utf-8
 
 require "scc_api/credentials"
-require "scc_api/logger"
+require "scc_api/exceptions"
 require "scc_api/http_request"
+require "scc_api/logger"
+require "scc_api/product_services"
 
 require "json"
 
@@ -59,7 +61,7 @@ module SccApi
     # generic HTTP(S) transfer for JSON requests/responses
     # TODO: proxy support? (http://apidock.com/ruby/Net/HTTP)
     def json_http_handler(request, redirect_count = MAX_REDIRECTS)
-      raise "Reached maximum number of HTTP redirects, aborting" if redirect_count == 0
+      raise SccApi::RedirectionLimit if redirect_count == 0
 
       http = create_http_connection(request.url)
       # send the HTTP request
@@ -82,12 +84,21 @@ module SccApi
         # retry recursively with redirected URL
         request.url = URI(location)
         json_http_handler(request, redirect_count - 1)
+      when Net::HTTPUnauthorized then
+        raise SccApi::NotAuthorized
+      # 422 use SCC to report errors with registration
+      when Net::HTTPUnprocessableEntity then
+        log.error("SCC returns 422")
+        log.info("Response body: #{response.body}")
+        raise SccApi::ErrorResponse.new(response)
       else
-        # TODO error handling
         log.error("HTTP Error: #{response.inspect}")
         log.info("Response body: #{response.body}")
-        raise "HTTP failed: #{response.code}: #{response.message}"
+        raise SccApi::HttpError.new(response)
       end
+    #raise nice exception if there is no network connection
+    rescue SocketError
+      raise SccApi::NoNetworkError
     end
 
     def create_http_connection(url)
