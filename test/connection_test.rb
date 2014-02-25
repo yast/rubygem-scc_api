@@ -100,12 +100,12 @@ describe SccApi::Connection do
       @connection.send(method, *args)
     end
 
-    it "raises RuntimeError if number of redirections exceed limit" do
+    it "raises SccApi::RedirectionLimit if the number of redirections exceeds the limit" do
       http = double()
       Net::HTTP.stub(:new).and_return(http)
       http.stub(:request).and_return(@redirection)
 
-      expect {@connection.send(method, *args)}.to raise_error(RuntimeError)
+      expect {@connection.send(method, *args)}.to raise_error(SccApi::RedirectionLimit)
     end
   end
 

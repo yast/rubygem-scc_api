@@ -61,7 +61,7 @@ module SccApi
     # generic HTTP(S) transfer for JSON requests/responses
     # TODO: proxy support? (http://apidock.com/ruby/Net/HTTP)
     def json_http_handler(request, redirect_count = MAX_REDIRECTS)
-      raise "Reached maximum number of HTTP redirects, aborting" if redirect_count == 0
+      raise SccApi::RedirectionLimit if redirect_count == 0
 
       http = create_http_connection(request.url)
       # send the HTTP request

@@ -21,4 +21,10 @@ module SccApi
       super response.body
     end
   end
+
+  class RedirectionLimit < RuntimeError
+    def initialize
+      super "HTTP Redirection limit reached"
+    end
+  end
 end
