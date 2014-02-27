@@ -24,10 +24,14 @@ describe SccApi::HwDetection do
       expect(returned).to eq(["intel"]), "Detected graphics cards vendors: '#{returned}'"
     end
 
-    it "returns no graphics cards vendors" do
+    it "returns empty array if no graphic card found" do
       SccApi::HwDetection.should_receive(:'`').with('PATH="$PATH":/sbin lspci -n -vmm').and_return(File.read("#{fixtures_dir}/lspci_no_gfx.out"))
-      returned = SccApi::HwDetection.graphics_card_vendors
-      expect(returned).to eq([]), "Detected graphics cards vendors: '#{returned}'"
+      expect(SccApi::HwDetection.graphics_card_vendors).to be_empty
+    end
+
+    it "returns #{SccApi::HwDetection::UNKNOWN_VENDOR.inspect} if vendor is not recognized" do
+      SccApi::HwDetection.should_receive(:'`').with('PATH="$PATH":/sbin lspci -n -vmm').and_return(File.read("#{fixtures_dir}/lspci_unknown_gfx.out"))
+      expect(SccApi::HwDetection.graphics_card_vendors).to include(SccApi::HwDetection::UNKNOWN_VENDOR)
     end
   end
 
