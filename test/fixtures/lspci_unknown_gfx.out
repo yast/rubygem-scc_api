@@ -1,0 +1,67 @@
+Slot:	00:00.0
+Class:	0600
+Vendor:	8086
+Device:	1237
+SVendor:	1af4
+SDevice:	1100
+Rev:	02
+
+Slot:	00:01.0
+Class:	0601
+Vendor:	8086
+Device:	7000
+SVendor:	1af4
+SDevice:	1100
+PhySlot:	1
+
+Slot:	00:01.1
+Class:	0101
+Vendor:	8086
+Device:	7010
+SVendor:	1af4
+SDevice:	1100
+PhySlot:	1
+ProgIf:	80
+
+Slot:	00:01.2
+Class:	0c03
+Vendor:	8086
+Device:	7020
+SVendor:	1af4
+SDevice:	1100
+PhySlot:	1
+Rev:	01
+
+Slot:	00:01.3
+Class:	0680
+Vendor:	8086
+Device:	7113
+SVendor:	1af4
+SDevice:	1100
+PhySlot:	1
+Rev:	03
+
+Slot:	00:02.0
+Class:	0300
+Vendor:	1234
+Device:	1111
+SVendor:	1af4
+SDevice:	1100
+PhySlot:	2
+
+Slot:	00:03.0
+Class:	0200
+Vendor:	1af4
+Device:	1000
+SVendor:	1af4
+SDevice:	0001
+PhySlot:	3
+
+Slot:	00:04.0
+Class:	0100
+Vendor:	1af4
+Device:	1001
+SVendor:	1af4
+SDevice:	0002
+PhySlot:	4
+

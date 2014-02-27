@@ -42,7 +42,7 @@ module SccApi
         # 0300 = "VGA compatible controller"
         if pci_device.match /^Class:\s+0300$/
           if pci_device.match /^Vendor:\s+(\d+)/
-            result << VENDOR_ID_MAPPING[$1] || UNKNOWN_VENDOR
+            result << (VENDOR_ID_MAPPING[$1] || UNKNOWN_VENDOR)
           end
         end
         result
