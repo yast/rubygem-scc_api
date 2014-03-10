@@ -1,4 +1,12 @@
 -------------------------------------------------------------------
+Mon Mar 10 12:47:21 UTC 2014 - lslezak@suse.cz
+
+- disable HW detection (CPU detection does not work on S390 and
+  the requirements for subscription validation are still unclear)
+  (bnc#867555)
+- 0.2.6
+
+-------------------------------------------------------------------
 Thu Feb 27 11:17:39 UTC 2014 - jreidinger@suse.com
 
 - fix return value for unknown graphic card vendor (BNC#864859)
