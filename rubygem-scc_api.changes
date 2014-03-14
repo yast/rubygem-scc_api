@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Fri Mar 14 16:23:33 UTC 2014 - lslezak@suse.cz
+
+- added initial support for product extensions (add-ons)
+  (FATE#312925)
+- 0.2.7
+
+-------------------------------------------------------------------
 Mon Mar 10 12:47:21 UTC 2014 - lslezak@suse.cz
 
 - disable HW detection (CPU detection does not work on S390 and
