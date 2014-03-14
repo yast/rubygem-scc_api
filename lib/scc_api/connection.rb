@@ -56,6 +56,16 @@ module SccApi
       return ProductServices.from_hash(services)
     end
 
+    # Get the extensions for the product
+    # @return [ProductExtensions] extensions available for product
+    def extensions_for(product)
+      request = ExtensionsRequest.new(self, product)
+      extensions = json_http_handler(request)
+      log.info "Got extensions: #{extensions}"
+
+      return ProductExtensions.from_hash(extensions)
+    end
+
     private
 
     # generic HTTP(S) transfer for JSON requests/responses
