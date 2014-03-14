@@ -107,4 +107,23 @@ module SccApi
       super(target_url, connection, body: body, method: :post)
     end
   end
+
+# Request obtaining the list of extensions for the given product
+# @see https://github.com/SUSE/connect/wiki/SCC-API-(Implemented)#prod_list
+  class ExtensionsRequest < HttpRequest
+    URL_PATH = "/systems/products"
+
+    def initialize(connection, product)
+      target_url = URI(connection.url + URL_PATH)
+
+      body = {
+          "product_ident" => product["name"]
+      }
+
+      # do not log the registration code
+      log.info("GET /systems/products data: #{body}")
+
+      super(target_url, connection, body: body, method: :get)
+    end
+  end
 end
