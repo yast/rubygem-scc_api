@@ -97,7 +97,8 @@ module SccApi
       body = {
         "product_ident" => product["name"],
         "product_version" => product["version"],
-        "arch" => product["arch"]
+        "arch" => product["arch"],
+        "release_type" => product["release_type"]
       }
 
       # do not log the registration code
