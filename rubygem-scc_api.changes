@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Mon Apr 14 12:21:42 UTC 2014 - lslezak@suse.cz
+
+- return also addon version and architecture when querying for
+  available addons
+- 0.2.9
+
+-------------------------------------------------------------------
 Mon Apr 14 09:21:10 UTC 2014 - lslezak@suse.cz
 
 - pass also "release_type" product parameter (bnc#873194)
