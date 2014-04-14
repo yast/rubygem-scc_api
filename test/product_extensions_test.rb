@@ -9,7 +9,7 @@ describe SccApi::ProductExtensions do
     it "creates ProductExtensions from a SCC response" do
       response = [
         {
-          "architecture_id" => nil,
+          "arch" => "x86_64",
           "created_at" => nil,
           "edition_id" => nil,
           "free" => false,
@@ -21,10 +21,11 @@ describe SccApi::ProductExtensions do
           "productdataid" => nil,
           "release_type" => nil,
           "updated_at" => nil,
-          "zypper_name" => "SLE_SDK_MOCK"
+          "zypper_name" => "SLE_SDK_MOCK",
+          "zypper_version" => "12"
         },
         {
-          "architecture_id" => nil,
+          "arch" => "x86_64",
           "created_at" => nil,
           "edition_id" => nil,
           "free" => false,
@@ -36,7 +37,8 @@ describe SccApi::ProductExtensions do
           "productdataid" => nil,
           "release_type" => nil,
           "updated_at" => nil,
-          "zypper_name" => "SLE_HAE_MOCK"
+          "zypper_name" => "SLE_HAE_MOCK",
+          "zypper_version" => "12"
         }
       ]
 
@@ -47,6 +49,7 @@ describe SccApi::ProductExtensions do
       expect(ext1.short_name).to eq("SLE12 SDK MOCK")
       expect(ext1.product_ident).to eq("SLE_SDK_MOCK")
       expect(ext1.free).to eq(false)
+      expect(ext1.version).to eq("12")
     end
   end
 end
