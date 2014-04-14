@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Mon Apr 14 09:21:10 UTC 2014 - lslezak@suse.cz
+
+- pass also "release_type" product parameter (bnc#873194)
+- 0.2.8
+
+-------------------------------------------------------------------
 Fri Mar 14 16:23:33 UTC 2014 - lslezak@suse.cz
 
 - added initial support for product extensions (add-ons)

@@ -35,7 +35,7 @@ describe SccApi::RegisterRequest do
 
   describe ".new" do
     it "sends product data and registration code in body" do
-      product = {"name" => "SUSE_SLES", "arch" => "x86_64", "version" => "12"}
+      product = {"name" => "SUSE_SLES", "arch" => "x86_64", "version" => "12", "release_type" => "DVD"}
       @connection.credentials = SccApi::Credentials.new("user", "password", product["name"])
 
       request = SccApi::RegisterRequest.new(@connection, product)
@@ -43,6 +43,7 @@ describe SccApi::RegisterRequest do
           "product_ident" => product["name"],
           "product_version" => product["version"],
           "arch" => product["arch"],
+          "release_type" => "DVD",
           "token" => "reg_code"
         })
       expect(request.create_request.fetch("Authorization")).to start_with("Basic ")
