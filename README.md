@@ -9,5 +9,5 @@ Use [SUSEConnect](https://github.com/SUSE/connect/) for accessing the SCC REST A
 GIT
 ---
 
-If you want to see the last state check the [*master_old*](../master_old) branch.
+If you want to see the last state check the [*master_old*](../../tree/master_old) branch.
 
